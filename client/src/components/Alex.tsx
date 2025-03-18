@@ -7,7 +7,7 @@ import {useWsClient} from "ws-request-hook";
 export default function Alex() {
     const [pass, setPass] = useState<string | undefined>(undefined);
     const [jwt, setJwt] = useState<string | undefined>(undefined);
-    const [questions, setQuestions] = useState<Question[]>([{timestamp: new Date(), questiontext: 'sadsad', id: ''}]);
+    const [questions, setQuestions] = useState<Question[]>([]);
     const {readyState, onMessage} = useWsClient();
 
     useEffect(() => {
@@ -22,7 +22,7 @@ export default function Alex() {
 
     useEffect(() => {
         if (readyState !== 1) return;
-        const unsub = onMessage<BroadcastToAlex>(StringConstants.BroadcastToAlex, (dto) => {
+        onMessage<BroadcastToAlex>(StringConstants.BroadcastToAlex, (dto) => {
             toast("you got mail");
             console.log(dto);
             setQuestions(prevQuestions => [ dto.question!,...prevQuestions,]);
@@ -32,6 +32,7 @@ export default function Alex() {
     
     const getPreviousQuestions = () => {
         if (jwt) {
+            //Here you can also use the second and third parameter to paginate the results, but the client always just gets the default recent 5
             QuestionApi.getPreviousQuestions(jwt, undefined,  undefined).then(res => {
                 setQuestions(res)
             })
