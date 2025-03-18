@@ -32,6 +32,6 @@ jobs:
           env_vars: |
             APPOPTIONS__DbConnectionString=${{ secrets.DBCONNECTIONSTRING }}
             APPOPTIONS__JwtSecret=${{secrets.JWT_SECRET}}
-            APPOPTIONS__PASS: ${{secrets.PASS}}
+            APPOPTIONS__Pass: ${{secrets.PASS}}
 
       - run: echo "${{ steps.deploy.outputs.url }}"
