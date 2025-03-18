@@ -207,7 +207,7 @@ public class WebSocketConnectionManager<TConnection, TMessageBase> : IConnection
     {
         try
         {
-            _logger.LogInformation(JsonSerializer.Serialize(new
+            _logger.LogDebug(JsonSerializer.Serialize(new
             {
                 ConnectionIdToSocket = await GetAllConnectionIdsWithSocketId(),
                 SocketToConnectionId = await GetAllSocketIdsWithConnectionId(),
@@ -288,14 +288,14 @@ public class WebSocketConnectionManager<TConnection, TMessageBase> : IConnection
                 {
                     dynamic dynamicMessage = baseMessage;
                     webSocket.SendDto((BaseDto)dynamicMessage);
-                    _logger.LogDebug($"Sent BaseDto message to socket {GetSocketId(socket)}");
+                    _logger.LogInformation($"Sent message to socket {GetSocketId(socket)}");
                     return;
                 }
 
                 var json = JsonSerializer.Serialize(message,
                     new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
                 webSocket.Send(json);
-                _logger.LogDebug($"Sent JSON message to socket {GetSocketId(socket)}");
+                _logger.LogInformation($"Sent JSON message to socket {GetSocketId(socket)}");
                 return;
             }
 
