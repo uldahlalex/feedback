@@ -24,7 +24,7 @@ public static class Extensions
         var port = GetAvailablePort(wsPort);
         Environment.SetEnvironmentVariable("PORT", port.ToString());
         var url = $"ws://0.0.0.0:{port}";
-        var logger = app.Services.GetRequiredService<ILogger<string>>();
+        var logger = app.Services.GetRequiredService<ILogger<NonStaticWsExtensionClassForLogger>>();
         logger.LogInformation("WS running on url: " + url);
         var server = new WebSocketServer(url);
         Action<IWebSocketConnection> config = ws =>
@@ -91,3 +91,5 @@ public static class Extensions
         return port;
     }
 }
+
+public class NonStaticWsExtensionClassForLogger;
