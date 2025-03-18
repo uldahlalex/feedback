@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat with SignalR</title>
+    <style>
+        .message { margin-bottom: 10px; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.7/signalr.min.js"></script>
+</head>
+<body>
+<div>
+    <input type="text" id="userInput" placeholder="User" />
+    <input type="text" id="messageInput" placeholder="Message" />
+    <button id="sendButton">Send Message</button>
+</div>
+<div id="messagesList"></div>
+
+<script>
+    let connection = new signalR.HubConnectionBuilder()
+        .withUrl("http://localhost:5000/chatHub")  // Update with your server URL if different
+        .build();
+
+    connection.on("ReceiveMessage", function (user, message) {
+        let encodedMsg = user + " says: " + message;
+        let messageElement = document.createElement("div");
+        messageElement.textContent = encodedMsg;
+        messageElement.classList.add("message");
+        document.getElementById("messagesList").appendChild(messageElement);
+    });
+
+    connection.start()
+        .then(function () {
+            document.getElementById("sendButton").addEventListener("click", function () {
+                let user = document.getElementById("userInput").value;
+                let message = document.getElementById("messageInput").value;
+                connection.invoke("SendMessage", user, message).catch(err => console.error(err));
+            });
+        })
+        .catch(function (err) {
+            return console.error(err.toString());
+        });
+</script>
+</body>
+</html>
