@@ -22,10 +22,12 @@ public class QuestionController(IQuestionService questionService, ISecurityServi
     public const string GetPreviousQuestionsRoute = nameof(GetPreviousQuestions);
 
     [Route(GetPreviousQuestionsRoute)]
-    public ActionResult<List<Question>> GetPreviousQuestions([FromBody] Question? lastQuestion = null, int take = 5)
+    public ActionResult<List<Question>> GetPreviousQuestions( 
+        [FromHeader]string authorization,
+        [FromBody] Question? lastQuestion = null, 
+        int take = 5)
     {
-        var jwt = HttpContext.GetJwt();
-        securityService.VerifyJwtOrThrow(jwt);
+        securityService.VerifyJwtOrThrow(authorization);
         return Ok(questionService.GetPreviousXQuestions(lastQuestion, take));
     }
 

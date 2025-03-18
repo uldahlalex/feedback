@@ -38,6 +38,45 @@
         }
       }
     },
+    "/AuthWithJwt": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_AuthWithJwt",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "clientId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/AddQuestion": {
       "post": {
         "tags": [
@@ -79,6 +118,14 @@
         "operationId": "Question_GetPreviousQuestions",
         "parameters": [
           {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
             "name": "take",
             "in": "query",
             "schema": {
@@ -86,7 +133,7 @@
               "format": "int32",
               "default": 5
             },
-            "x-position": 2
+            "x-position": 3
           }
         ],
         "requestBody": {
@@ -98,7 +145,7 @@
               }
             }
           },
-          "x-position": 1
+          "x-position": 2
         },
         "responses": {
           "200": {

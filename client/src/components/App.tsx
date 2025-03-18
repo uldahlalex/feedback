@@ -1,10 +1,18 @@
 import Question from './Question.tsx';
 import {WsClientProvider} from 'ws-request-hook';
 import {useEffect, useState} from "react";
+import {BrowserRouter, Route, Routes, useParams} from "react-router";
 const baseUrl = import.meta.env.VITE_API_BASE_URL
 const prod = import.meta.env.PROD
-
+import {AuthClient} from "../generated-client.ts";
+import {QuestionClient} from "../generated-client.ts";
+import Alex from "./Alex.tsx";
 export const randomUid = crypto.randomUUID()
+
+const prodRestUrl = prod ? 'https://' + baseUrl : 'http://' + baseUrl;
+
+export const AuthApi = new AuthClient(prodRestUrl);
+export const QuestionApi = new QuestionClient(prodRestUrl);
 
 export default function App() {
     
@@ -14,7 +22,6 @@ export default function App() {
 setUrl(finalUrl);
     }, [prod, baseUrl]);
     
-    const navigate = useNavigate()
     
     return (<>
 
@@ -23,8 +30,18 @@ setUrl(finalUrl);
         <WsClientProvider url={url}>
 
             <div className="flex flex-col">
-                <div>
-                     <Question /> 
+                <div>    
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path="/" element={<Question />}></Route>
+                            <Route path='/alex' element={<Alex />}></Route>
+                            
+                            
+                        </Routes>
+                    </BrowserRouter>
+                
+                    
+                    
                 </div>
 
             </div>

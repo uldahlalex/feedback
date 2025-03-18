@@ -17,7 +17,7 @@ public interface IConnectionManager
     Task OnClose<T>(T socket, string clientId);
 
     // Topic management methods
-    Task AddToTopic(string topic, string memberId, TimeSpan? expiry = null);
+    Task AddToTopic(string topic, string memberId);
     Task RemoveFromTopic(string topic, string memberId);
     Task<List<string>> GetMembersFromTopicId(string topic);
     Task<List<string>> GetTopicsFromMemberId(string memberId);
