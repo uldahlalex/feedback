@@ -1,3 +1,4 @@
+import Question from './Question.tsx';
 import {WsClientProvider} from 'ws-request-hook';
 import {useEffect, useState} from "react";
 const baseUrl = import.meta.env.VITE_API_BASE_URL
@@ -13,6 +14,8 @@ export default function App() {
 setUrl(finalUrl);
     }, [prod, baseUrl]);
     
+    const navigate = useNavigate()
+    
     return (<>
 
         {
@@ -21,7 +24,7 @@ setUrl(finalUrl);
 
             <div className="flex flex-col">
                 <div>
-                    { !prod && <SuperSimpleKahootCloneGui /> }
+                     <Question /> 
                 </div>
 
             </div>
