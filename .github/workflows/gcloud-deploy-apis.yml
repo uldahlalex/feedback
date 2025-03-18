@@ -2,6 +2,7 @@ name: Deploy to Google Cloud Run
 
 on:
   workflow_dispatch:
+  push:
 
 jobs:
   deploy:
