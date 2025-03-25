@@ -5,6 +5,7 @@ namespace Application.Interfaces.Infrastructure.Websocket;
 public interface IConnectionManager
 {
     // Generic connection storage - application layer doesn't know the concrete type
+    List<object> GetAllSockets();
     ConcurrentDictionary<string, object> ConnectionIdToSocket { get; }
     ConcurrentDictionary<string, string> SocketToConnectionId { get; }
 

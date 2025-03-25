@@ -20,6 +20,11 @@ public class WebSocketConnectionManager<TConnection, TMessageBase> : IConnection
         _logger = logger;
     }
 
+    public List<object> GetAllSockets()
+    {
+        return _connectionIdToSocket.Values.ToList<object>();
+    }
+
     public ConcurrentDictionary<string, object> ConnectionIdToSocket =>
         new(_connectionIdToSocket.ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value));
 

@@ -27,6 +27,16 @@ public static class Extensions
         var logger = app.Services.GetRequiredService<ILogger<NonStaticWsExtensionClassForLogger>>();
         logger.LogInformation("WS running on url: " + url);
         var server = new WebSocketServer(url);
+        var manager = app.Services.GetRequiredService<IConnectionManager>();
+        new Timer(state =>
+        {
+            var clients = manager.GetAllSockets();
+            foreach (var client in clients)
+            {
+                var ws = (IWebSocketConnection)client;
+                ws.SendDto(new ServerSendsPing());
+            }
+        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(30));
         Action<IWebSocketConnection> config = ws =>
         {
             var queryString = ws.ConnectionInfo.Path.Split('?').Length > 1
@@ -35,8 +45,7 @@ public static class Extensions
 
             var id = HttpUtility.ParseQueryString(queryString)["id"] ??
                      throw new Exception("Please specify ID query param for websocket connection");
-            using var scope = app.Services.CreateScope();
-            var manager = scope.ServiceProvider.GetRequiredService<IConnectionManager>();
+            
 
             ws.OnOpen = () => manager.OnOpen(ws, id);
             ws.OnClose = () => manager.OnClose(ws, id);
@@ -67,6 +76,8 @@ public static class Extensions
         server.Start(config);
         return app;
     }
+    
+
 
     private static int GetAvailablePort(int startPort)
     {
@@ -91,5 +102,7 @@ public static class Extensions
         return port;
     }
 }
+
+public class ServerSendsPing : BaseDto;
 
 public class NonStaticWsExtensionClassForLogger;
