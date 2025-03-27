@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Api.Rest;
 using Api.Websocket;
 using Application;
@@ -52,7 +53,8 @@ public class Program
                 await scope.ServiceProvider.GetRequiredService<Seeder>().Seed();
         }
 
-
+        var logger = app.Services.GetRequiredService<ILogger<Program>>();
+        logger.LogInformation(JsonSerializer.Serialize(appOptions));
         app.Urls.Clear();
         app.Urls.Add($"http://0.0.0.0:{appOptions.REST_PORT}");
         app.Services.GetRequiredService<IProxyConfig>()
