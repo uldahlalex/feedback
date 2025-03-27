@@ -14,7 +14,9 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.5.2",
-    "ws-request-hook": "^1.0.13"
+    "ws-request-hook": "^1.0.13",
+    "jotai": "^2.12.2",
+    "jotai-devtools": "^0.11.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",

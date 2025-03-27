@@ -3,10 +3,13 @@ import {AuthRequestDto, BroadcastToAlex, Question, QuestionClient, StringConstan
 import {AuthApi, QuestionApi, randomUid} from "./App.tsx";
 import toast from "react-hot-toast";
 import {useWsClient} from "ws-request-hook";
+import {useAtom} from "jotai";
+import {subscriptionAtom} from "../subscriptionAtom.tsx";
 
 export default function Alex() {
     const [pass, setPass] = useState<string | undefined>(undefined);
     const [jwt, setJwt] = useState<string | undefined>(undefined);
+    const [subscriptions, setSubscriptions] = useAtom(subscriptionAtom);
     const [questions, setQuestions] = useState<Question[]>([]);
     const {readyState, onMessage} = useWsClient();
 
@@ -14,6 +17,9 @@ export default function Alex() {
         const jwt = localStorage.getItem('jwt');
         if(jwt){
             setJwt(jwt);
+            AuthApi.authWithJwt(jwt, randomUid).then(e => {
+                console.log("Authenticated")
+            })
             setInterval(() => AuthApi.authWithJwt(jwt, randomUid).then(() => {
             }), 30000)
             
@@ -22,11 +28,16 @@ export default function Alex() {
 
     useEffect(() => {
         if (readyState !== 1) return;
-        onMessage<BroadcastToAlex>(StringConstants.BroadcastToAlex, (dto) => {
+       onMessage<BroadcastToAlex>(StringConstants.BroadcastToAlex, (dto) => {
             toast("you got mail");
             console.log(dto);
             setQuestions(prevQuestions => [ dto.question!,...prevQuestions,]);
+           // console.log(JSON.stringify(subscriptions));
+           // setSubscriptions(subscriptions => [...subscriptions, subscription]);
+
         });
+
+
     }, [readyState]);
 
     
