@@ -19,3 +19,6 @@ jobs:
           APPOPTIONS__DbConnectionString: ${{secrets.DBCONNECTIONSTRING}}
           APPOPTIONS__JwtSecret: ${{secrets.JWT_SECRET}}
           APPOPTIONS__PASS: ${{secrets.PASS}}
+          APPOPTIONS__REDIS_HOST: ${{secrets.REDIS_HOST}}
+          APPOPTIONS__REDIS_PASS: ${{secrets.REDIS_PASS}}
+          APPOPTIONS__REDIS_USERNAME: ${{secrets.REDIS_USERNAME}}
