@@ -14,6 +14,9 @@ export default function Alex() {
         const jwt = localStorage.getItem('jwt');
         if(jwt){
             setJwt(jwt);
+            AuthApi.authWithJwt(jwt,  randomUid).then(e => {
+                
+            })
             setInterval(() => AuthApi.authWithJwt(jwt, randomUid).then(() => {
             }), 30000)
             

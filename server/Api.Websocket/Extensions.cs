@@ -28,15 +28,7 @@ public static class Extensions
         logger.LogInformation("WS running on url: " + url);
         var server = new WebSocketServer(url);
         var manager = app.Services.GetRequiredService<IConnectionManager>();
-        new Timer(state =>
-        {
-            var clients = manager.GetAllSockets();
-            foreach (var client in clients)
-            {
-                var ws = (IWebSocketConnection)client;
-                ws.SendDto(new ServerSendsPing());
-            }
-        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(30));
+
         Action<IWebSocketConnection> config = ws =>
         {
             var queryString = ws.ConnectionInfo.Path.Split('?').Length > 1
