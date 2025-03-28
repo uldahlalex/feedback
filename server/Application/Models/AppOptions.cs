@@ -6,9 +6,6 @@ namespace Application.Models;
 
 public sealed class AppOptions
 {
-    [Required] public string REDIS_HOST { get; set; } = string.Empty!;
-    [Required] public string REDIS_PASS { get; set; } = string.Empty!;
-    [Required] public string REDIS_USERNAME { get; set; } = string.Empty!;
     [Required] public string JwtSecret { get; set; } = string.Empty!;
     [Required] public string DbConnectionString { get; set; } = string.Empty!;
     [Required] public string Pass { get; set; } = string.Empty!;

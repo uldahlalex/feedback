@@ -56,7 +56,6 @@ public class WebSocketConnectionManager<TConnection, TMessageBase> : IConnection
     }
     public async Task AddToTopic(string topic, string memberId)
     {
-        _logger.LogInformation("Adding "+memberId+" to topic "+topic);
         // Add to TopicMembers
         TopicMembers.AddOrUpdate(
             topic,
@@ -171,11 +170,15 @@ public class WebSocketConnectionManager<TConnection, TMessageBase> : IConnection
             throw new ArgumentException($"Expected socket of type {typeof(TConnection).Name} but got {typeof(T).Name}");
 
         var socketId = GetSocketId(typedSocket);
-        _logger.LogInformation($"OnClose called with clientId: {clientId} and socketId: {socketId}");
+        _logger.LogDebug($"OnClose called with clientId: {clientId} and socketId: {socketId}");
 
+        if (_connectionIdToSocket.TryGetValue(clientId, out var currentSocket) &&
+            GetSocketId(currentSocket) == socketId)
+        {
+            _connectionIdToSocket.TryRemove(clientId, out _);
+            _logger.LogInformation($"Removed connection for client {clientId}");
+        }
 
-        _connectionIdToSocket.TryRemove(clientId, out _);
-        _logger.LogInformation($"Removed connection for client {clientId}");
         SocketToConnectionId.TryRemove(socketId, out _);
 
         if (MemberTopics.TryGetValue(clientId, out var topics))
@@ -209,7 +212,7 @@ public class WebSocketConnectionManager<TConnection, TMessageBase> : IConnection
     {
         try
         {
-            _logger.LogInformation(JsonSerializer.Serialize(new
+            _logger.LogDebug(JsonSerializer.Serialize(new
             {
                 ConnectionIdToSocket = await GetAllConnectionIdsWithSocketId(),
                 SocketToConnectionId = await GetAllSocketIdsWithConnectionId(),

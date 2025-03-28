@@ -31,7 +31,7 @@ public class Program
         services.RegisterApplicationServices();
 
         services.AddDataSourceAndRepositories();
-        services.AddWebsocketInfrastructure(appOptions);
+        services.AddWebsocketInfrastructure();
 
         services.RegisterWebsocketApiServices();
         services.RegisterRestApiServices();
