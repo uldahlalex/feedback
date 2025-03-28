@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Text.Json;
 using System.Web;
 using Application.Interfaces.Infrastructure.Websocket;
@@ -37,8 +38,7 @@ public static class Extensions
 
             var id = HttpUtility.ParseQueryString(queryString)["id"] ??
                      throw new Exception("Please specify ID query param for websocket connection");
-            
-
+      
             ws.OnOpen = () => manager.OnOpen(ws, id);
             ws.OnClose = () => manager.OnClose(ws, id);
             ws.OnError = ex => ws.SendDto(new ServerSendsErrorMessage { Message = ex.Message });
@@ -51,13 +51,22 @@ public static class Extensions
                 catch (Exception e)
                 {
                     logger.LogError(e, "Error in handling message: {message}", message);
-                    var baseDto = JsonSerializer.Deserialize<BaseDto>(message, new JsonSerializerOptions
+                    BaseDto baseDto = null;
+                    try
                     {
-                        PropertyNameCaseInsensitive = true
-                    }) ?? new BaseDto
+                        baseDto = JsonSerializer.Deserialize<BaseDto>(message, new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+                    }
+                    catch
                     {
-                        eventType = nameof(ServerSendsErrorMessage)
-                    };
+                       baseDto= new BaseDto
+                        {
+                            eventType = nameof(ServerSendsErrorMessage)
+                        };
+                    }
+                    
                     var resp = new ServerSendsErrorMessage
                         { Message = e.Message, requestId = baseDto.requestId ?? "" };
                     ws.SendDto(resp);

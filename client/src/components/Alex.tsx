@@ -17,8 +17,6 @@ export default function Alex() {
             AuthApi.authWithJwt(jwt,  randomUid).then(e => {
                 
             })
-            setInterval(() => AuthApi.authWithJwt(jwt, randomUid).then(() => {
-            }), 30000)
             
         }
     }, []);
