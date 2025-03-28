@@ -25,11 +25,12 @@ export default function Alex() {
 
     useEffect(() => {
         if (readyState !== 1) return;
-        onMessage<BroadcastToAlex>(StringConstants.BroadcastToAlex, (dto) => {
+        const unsub = onMessage<BroadcastToAlex>(StringConstants.BroadcastToAlex, (dto) => {
             toast("you got mail");
             console.log(dto);
             setQuestions(prevQuestions => [ dto.question!,...prevQuestions,]);
         });
+        return () => unsub();
     }, [readyState]);
 
     
