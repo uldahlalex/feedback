@@ -21,10 +21,10 @@ public class AuthController(ISecurityService securityService, IConnectionManager
 
     [HttpGet]
     [Route(AuthWithJwtRoute)]
-    public ActionResult AuthWithJwt([FromHeader]string authorization, string clientId)
+    public async Task<ActionResult> AuthWithJwt([FromHeader]string authorization, string clientId)
     {
         securityService.VerifyJwtOrThrow(authorization);
-        connectionManager.AddToTopic("alex", clientId);
+        await connectionManager.AddToTopic("alex", clientId);
         return Ok();
     }
 }

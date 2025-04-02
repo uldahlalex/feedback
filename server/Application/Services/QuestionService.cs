@@ -9,7 +9,7 @@ namespace Application.Services;
 
 public class QuestionService(IQuestionRepository questionRepository, IConnectionManager connectionManager ) : IQuestionService
 {
-    public Question AddQuestion(CreateQuestionDto dto)
+    public async Task<Question> AddQuestion(CreateQuestionDto dto)
     {
         var q = new Question()
         {
@@ -21,7 +21,7 @@ public class QuestionService(IQuestionRepository questionRepository, IConnection
         {
             Question = q
         };
-        connectionManager.BroadcastToTopic("alex",broadcast);
+        await connectionManager.BroadcastToTopic("alex",broadcast);
         return questionRepository.AddQuestion(q);
     }
 

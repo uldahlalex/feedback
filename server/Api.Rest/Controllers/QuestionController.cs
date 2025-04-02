@@ -13,9 +13,9 @@ public class QuestionController(IQuestionService questionService, ISecurityServi
     public const string AddQuestionRoute = nameof(AddQuestion);
 
     [Route(AddQuestionRoute)]
-    public ActionResult AddQuestion([FromBody]CreateQuestionDto dto)
+    public async Task<ActionResult> AddQuestion([FromBody]CreateQuestionDto dto)
     {
-        questionService.AddQuestion(dto);
+        await questionService.AddQuestion(dto);
         return Ok();
     }
     
