@@ -10,19 +10,17 @@ export default function Alex() {
     const [questions, setQuestions] = useState<Question[]>([]);
     const {readyState, onMessage} = useWsClient();
 
+
     useEffect(() => {
+        if (readyState !== 1) return;
         const jwt = localStorage.getItem('jwt');
         if(jwt){
             setJwt(jwt);
             AuthApi.authWithJwt(jwt,  randomUid).then(e => {
                 toast("Welcome back")
             })
-            
-        }
-    }, []);
 
-    useEffect(() => {
-        if (readyState !== 1) return;
+        }
         const unsub = onMessage<BroadcastToAlex>(StringConstants.BroadcastToAlex, (dto) => {
             toast("you got mail");
             console.log(dto);
