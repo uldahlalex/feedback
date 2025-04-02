@@ -235,7 +235,7 @@ public sealed class WebSocketConnectionManager : IConnectionManager
                 MemberSubscriptions = _memberTopics
             };
 
-            _logger.LogDebug("Current state: {State}", 
+            _logger.LogInformation("Current state: {State}", 
                 JsonSerializer.Serialize(state, new JsonSerializerOptions { WriteIndented = true }));
         }
         catch (Exception ex)
