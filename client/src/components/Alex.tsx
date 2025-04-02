@@ -15,7 +15,7 @@ export default function Alex() {
         if(jwt){
             setJwt(jwt);
             AuthApi.authWithJwt(jwt,  randomUid).then(e => {
-                
+                toast("Welcome back")
             })
             
         }
