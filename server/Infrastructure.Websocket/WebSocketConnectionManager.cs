@@ -13,13 +13,29 @@ public sealed class WebSocketConnectionManager : IConnectionManager
     private readonly ConcurrentDictionary<string, HashSet<string>> _topicMembers = new();
     private readonly ConcurrentDictionary<string, HashSet<string>> _memberTopics = new();
     private readonly ConcurrentDictionary<string, string> _socketToConnectionId = new();
+        public WebSocketConnectionManager(ILogger<WebSocketConnectionManager> logger)
+        {
+            _logger = logger;
+        }
 
-    public WebSocketConnectionManager(ILogger<WebSocketConnectionManager> logger)
-    {
-        _logger = logger;
-    }
 
-    public async Task OnOpen(object socket, string clientId)
+        public ConcurrentDictionary<string, object> GetConnectionIdToSocketDictionary()
+        {
+            var idToSocket = new ConcurrentDictionary<string, object>();
+            foreach (var (key, value) in _connectionIdToSocket)
+            {
+                idToSocket.TryAdd(key, value);
+            }
+
+            return idToSocket;
+        }
+
+        public ConcurrentDictionary<string, string> GetSocketIdToClientIdDictionary()
+        {
+            return _socketToConnectionId;
+        }
+
+        public async Task OnOpen(object socket, string clientId)
     {
         if (socket is not IWebSocketConnection webSocket)
         {
@@ -183,6 +199,29 @@ public sealed class WebSocketConnectionManager : IConnectionManager
             _memberTopics.TryGetValue(memberId, out var topics)
                 ? topics.ToList()
                 : new List<string>());
+    }
+
+    public string GetClientIdFromSocket(object socket)
+    {
+        if (socket is not IWebSocketConnection webSocket)
+        {
+            throw new ArgumentException("Socket must be an IWebSocketConnection", nameof(socket));
+        }
+
+        if (_socketToConnectionId.TryGetValue(webSocket.ConnectionInfo.Id.ToString(), out var clientId))
+        {
+            return clientId;
+        }
+        throw new Exception("Could not find clientId for socket: "+webSocket.ConnectionInfo.Id);
+    }
+
+    public object GetSocketFromClientId(string clientId)
+    {
+        if (_connectionIdToSocket.TryGetValue(clientId, out var socket))
+        {
+            return socket;
+        }
+        throw new Exception("Could not find socket for clientId: "+clientId);
     }
 
     private async Task LogCurrentState()

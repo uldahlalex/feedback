@@ -1,9 +1,0 @@
-- Submit question
-    - Persist in DB
-    - Broadcast to alex
-    - Notification: thank you
-- Sign in as alex
-    - Subscribe to broadcasts
-    - Get last 5 messages
-    - Clear messages in UI
-- Rate limiter?
